@@ -3,11 +3,22 @@ from flask import Flask, render_template, request, redirect
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 
 from flask_wtf import FlaskForm
+import mysql.connector
+
+import os
+from dotenv import find_dotenv, load_dotenv
+
+dotenv_path = find_dotenv()
+
+load_dotenv(dotenv_path)
+
+env_User = os.getenv("user")
+env_Password = os.getenv("password")
+env_Host = os.getenv("host")
 
 
 
 app = Flask(__name__)
-import mysql.connector
 app.config['SECRET_KEY'] = "norge123"
 app.config['UPLOADED_PHOTOS_DEST'] = 'Images'
 
@@ -34,12 +45,13 @@ def customers():
             return redirect("/customers/add")
         elif Direction == "update":
             return redirect("/customers/update")
+
     mydb = mysql.connector.connect(
 
-        host = "10.200.14.24",
+        host = env_Host,
         port = 3306,
-        user = "edmalemaLocal",
-        password = "norge123",
+        user = env_User,
+        password = env_Password,
         database = "flask_db"
     
     )
