@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../Styles/Styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'Styles/Styles.css') }}">
 </head>
+
 <body>
+    {% for c in Data %}
     <div class="InfoBox">
 
-        <img src='../Images/OuterWildsImg.jpg' alt="Image" class="GameImage">
+        <img src={{c[3]}} alt="Image" class="GameImage">
+        
 
         <div class="TextDiv">
-            <h1>Outer Wilds</h1>
+            <h1>{{ c[0] }}</h1>
 
-            <p>Lorem ipsum</p>
+            <p>{{ c[1] }}</p>
 
-            <h1 style="font-size: 75px;"><b>10/10</b></h1>
+            <h1 style="font-size: 75px;"><b>{{ c[2] }}</b></h1>
         </div>
 
+
     </div>
+    {% endfor %}
+
 </body>
+
 </html>

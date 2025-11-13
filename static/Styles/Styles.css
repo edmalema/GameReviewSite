@@ -1,0 +1,26 @@
+body{
+    background-color: rgb(128, 128, 73);
+}
+
+.InfoBox{
+    display: flex;
+    width: 75%;
+    height: 500px;
+    background-color: rgb(255, 255, 255);
+    margin-left: 12.5%;
+    margin-top: 100px;
+}
+
+.GameImage{
+    height: 75%;
+    margin-top: 7.5%;
+    margin-left: 8%;
+}
+
+.TextDiv{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 7.5%;
+}
