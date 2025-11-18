@@ -12,15 +12,17 @@
     {% for c in Data %}
     <div class="InfoBox">
 
-        <img src='{{ c[3] }}' alt="Image" class="GameImage">
+        <img src='{{data:image/jpeg;base64, Images[x] }}' alt="Image" class="GameImage">
+
+        {% set x = x + 1 %}
         
 
         <div class="TextDiv">
-            <h1>{{ c[0] }}</h1>
+            <h1>{{ c[1] }}</h1>
 
-            <p>{{ c[1] }}</p>
+            <p>{{ c[2] }}</p>
 
-            <h1 style="font-size: 75px;"><b>{{ c[2] }}</b></h1>
+            <h1 style="font-size: 75px;"><b>{{ c[3] }}</b></h1>
         </div>
 
 

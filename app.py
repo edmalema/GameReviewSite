@@ -3,7 +3,10 @@ from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import SubmitField
-
+import base64
+from PIL import Image
+import io
+from io import BytesIO
 
 import mysql.connector
 import os
@@ -40,6 +43,10 @@ class UploadForm(FlaskForm):
     )
     submit = SubmitField('Upload')
 
+def convertToJpeg(image):
+    with BytesIO() as f:
+        image.save(f, format='JPEG')
+        return f.getvalue()
 
 
 @app.route('/', methods=["GET","POST"])
@@ -56,7 +63,20 @@ def Index():
     mycursor = mydb.cursor()
     mycursor.execute("SELECT * FROM games")
     result = mycursor.fetchall()
-    return render_template('Index.html', Data = result)
+    Y = 0
+    ImgList = []
+    for i in result:
+        image_data = result[Y][4]
+        Y += 1
+        binary_data = base64.b64decode(image_data)
+
+        image = Image.open(io.BytesIO(binary_data))
+
+        if image.mode == 'RGBA':
+            image = image.convert('RGB')
+
+        ImgList.append(convertToJpeg(image))
+    return render_template('Index.html', Data = result, Images = ImgList, x = 0) 
 
 
 
@@ -74,7 +94,12 @@ def UploadImage():
         Description = request.form['description']
         Rating = int(request.form['review'])
         Img_Data = pic.read()
+        Img_Data = base64.b64encode(Img_Data)
+        
+        
 
+        
+        
         #try:
         mydb = mysql.connector.connect(
 
