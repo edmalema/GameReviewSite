@@ -51,6 +51,26 @@ try:
 except:
     print("Table already made")
 
+
+question = input("Delete table? y/n: ")
+
+if (question == "y"):
+    mydb = mysql.connector.connect(
+
+        host = env_Host,
+        port = 3306,
+        user = env_User,
+        password = env_Password,
+        database = "reviewdb"
+
+    )
+
+    mycursor = mydb.cursor()
+
+    mycursor.execute("""TRUNCATE TABLE games;""")
+    print(mycursor.rowcount, "record(s) affected")
+
+
 # mydb = mysql.connector.connect(
 
 #     host = env_Host,

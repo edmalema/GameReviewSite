@@ -75,8 +75,14 @@ def Index():
         if image.mode == 'RGBA':
             image = image.convert('RGB')
 
-        ImgList.append(convertToJpeg(image))
-    return render_template('Index.html', Data = result, Images = ImgList, x = 0) 
+        buffer = io.BytesIO()
+        image.save(buffer, format="JPEG")
+        jpeg_bytes = buffer.getvalue()
+        jpeg_b64 = base64.b64encode(jpeg_bytes).decode("utf-8")
+
+        ImgList.append(jpeg_b64)
+        print(ImgList)
+    return render_template('Index.html', SQLData = result, Images = ImgList, x = 0) 
 
 
 

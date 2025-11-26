@@ -9,10 +9,10 @@
 </head>
 
 <body>
-    {% for c in Data %}
+    {% for c in SQLData %}
     <div class="InfoBox">
 
-        <img src='{{data:image/jpeg;base64, Images[x] }}' alt="Image" class="GameImage">
+        <img src='data:image/jpeg;base64,{{ Images[x] }}' alt="Image" class="GameImage">
 
         {% set x = x + 1 %}
         
