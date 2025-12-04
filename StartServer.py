@@ -46,7 +46,8 @@ try:
                     game VARCHAR(255),
                     info VARCHAR(255),
                     review INT NOT NULL,
-                    image LONGBLOB NOT NULL
+                    image LONGBLOB NOT NULL,
+                    likes INT NOT NULL
                     )""")
 except:
     print("Table already made")
@@ -67,7 +68,7 @@ if (question == "y"):
 
     mycursor = mydb.cursor()
 
-    mycursor.execute("""TRUNCATE TABLE games;""")
+    mycursor.execute("""DROP TABLE games;""")
     print(mycursor.rowcount, "record(s) affected")
 
 

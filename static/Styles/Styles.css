@@ -1,26 +1,62 @@
-body{
+body {
     background-color: rgb(128, 128, 73);
+    margin: 0;
 }
 
-.InfoBox{
+.InfoBox {
     display: flex;
     width: 75%;
     height: 500px;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 251, 245);
     margin-left: 12.5%;
     margin-top: 100px;
 }
 
-.GameImage{
+.GameImage {
     height: 75%;
+    width: 250px;
     margin-top: 7.5%;
     margin-left: 8%;
 }
 
-.TextDiv{
+.TextDiv {
     width: 60%;
     display: flex;
     flex-direction: column;
     text-align: center;
     margin-top: 7.5%;
+}
+
+
+
+.Header {
+    display: flex;
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(255, 251, 245);
+}
+
+
+.Like {
+    border: 0;
+    margin-left: 45.625%;
+    margin-top: -30px;
+    background-image: url('../Images/Unliked.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-color: transparent;
+    color: transparent;
+    cursor: pointer;
+}
+
+.LikeText{
+    font-size: 30px;
+    margin-top: 0;
 }

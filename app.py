@@ -49,8 +49,34 @@ def convertToJpeg(image):
         return f.getvalue()
 
 
-@app.route('/', methods=["GET","POST"])
-def Index():
+LikeList = []
+
+
+def Like(Post):
+    for i in LikeList:
+        print(i)
+        if i == Post: return
+    LikeList.append(Post)
+
+    mydb = mysql.connector.connect(
+
+        host = env_Host,
+        port = 3306,
+        user = env_User,
+        password = env_Password,
+        database = "reviewdb"
+
+    )
+
+    mycursor = mydb.cursor()
+
+    sql = f"UPDATE games SET likes = likes + 1 WHERE id = '{int(Post)}'"
+    mycursor.execute(sql)
+    mydb.commit()
+    print(mycursor.rowcount, "record(s) affected")
+
+
+def ImageLoader():
     mydb = mysql.connector.connect(
 
         host = env_Host,
@@ -81,19 +107,42 @@ def Index():
         jpeg_b64 = base64.b64encode(jpeg_bytes).decode("utf-8")
 
         ImgList.append(jpeg_b64)
-        print(ImgList)
-    return render_template('Index.html', SQLData = result, Images = ImgList, x = 0) 
+
+    return [result, ImgList]
+
+
+
+@app.route('/', methods=["GET","POST"])
+def Index():
+    if request.method == "POST":
+        SubmitInfo = request.form.get('submit')
+        if SubmitInfo == "upload":
+            return redirect("/upload")
+        elif SubmitInfo == "login":
+            return redirect("/login")
+        
+        LikeInfo = request.form.get('Like')
+        print(LikeInfo)
+        Like(LikeInfo)
+        if LikeInfo != None:
+            return render_template('Index.html', SQLData = ImageLoader()[0], Images = ImageLoader()[1])
+            
+
+
+    
+    return render_template('Index.html', SQLData = ImageLoader()[0], Images = ImageLoader()[1]) 
+
+
 
 
 
 @app.route('/upload', methods=["GET","POST"])
 def UploadImage():
     if request.method == "POST":
-        print("balz")
+
         pic = request.files['pic']
         if not pic:
             return "no img"
-        print("img")
         
         print(pic)
         GameName = request.form['name']
@@ -118,8 +167,8 @@ def UploadImage():
         )
 
         mycursor = mydb.cursor()
-        sql = "INSERT INTO games (game, info, review, image) VALUES (%s, %s, %s, %s)"
-        val = (GameName, Description, Rating, Img_Data)
+        sql = "INSERT INTO games (game, info, review, image, likes) VALUES (%s, %s, %s, %s, %s)"
+        val = (GameName, Description, Rating, Img_Data, 0)
         mycursor.execute(sql, val)
         mydb.commit()
         print(mycursor.rowcount, "record inserted.")
@@ -129,3 +178,10 @@ def UploadImage():
         #except:
         #    return "Something went wrong"
     return render_template("UploadSite.html")
+
+
+
+@app.route('/login', methods=["GET","POST"])
+def LoginSite():
+
+    return render_template("Login.html")

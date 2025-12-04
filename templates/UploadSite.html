@@ -1,19 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'Styles/Styles.css') }}">
+    <script src="{{ url_for('static', filename = 'Scripts/Upload.js') }}"></script>
 </head>
+
 <body>
-    
     <form action="/upload" enctype="multipart/form-data" method="POST">
-        <input type="file" name = "pic" accept="image/png, image/jpeg">
-        <input type="text" name="name" placeholder="Navn" />
-        <input type="text" name="description" placeholder="Description" />
-        <input type="number" max="10" min="0" name="review" placeholder="Review" />
+        <div class="InfoBox">
+
+            <input type="file" name="pic" accept="image/png, image/jpeg" class="GameImage">
+
+
+            <div class="TextDiv">
+                <h1><input type="text" name="name" placeholder="Navn" /></h1>
+
+                <p><input type="text" name="description" placeholder="Description" /></p>
+
+                <h1 style="font-size: 75px;"><input type="number" max="10" min="0" name="review" placeholder="Review" /></h1>
+            </div>
+
+
+        </div>
+
+
+
+        
+        
+        
+        
         <input type="submit" value="Upload">
     </form>
 
 </body>
+
 </html>
