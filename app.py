@@ -74,6 +74,8 @@ def Like(Post):
     mycursor.execute(sql)
     mydb.commit()
     print(mycursor.rowcount, "record(s) affected")
+    mycursor.close()
+    mydb.close()
 
 
 def ImageLoader():
@@ -89,6 +91,8 @@ def ImageLoader():
     mycursor = mydb.cursor()
     mycursor.execute("SELECT * FROM games")
     result = mycursor.fetchall()
+    mycursor.close()
+    mydb.close()
     Y = 0
     ImgList = []
     for i in result:
@@ -183,5 +187,58 @@ def UploadImage():
 
 @app.route('/login', methods=["GET","POST"])
 def LoginSite():
+    if request.method == "POST":
+        
+        Username = request.form['username']
+        Password = request.form['password']
+        
+        LoginSignUp = request.form['login']
+
+        if LoginSignUp == 'login':
+            mydb = mysql.connector.connect(
+
+                host = env_Host,
+                port = 3306,
+                user = env_User,
+                password = env_Password,
+                database = "reviewdb"
+
+            )
+
+            mycursor = mydb.cursor()
+            mycursor.execute("SELECT * FROM games")
+            result = mycursor.fetchall()
+            mycursor.close()
+            mydb.close()
+
+            Y = 0
+            for i in result:
+                if Username == result[Y][1] and Password == result[Y][2]:
+                    print("Logged in")
+                Y += 1
+
+        else:        
+            mydb = mysql.connector.connect(
+
+                host = env_Host,
+                port = 3306,
+                user = env_User,
+                password = env_Password,
+                database = "reviewdb"
+
+            )
+
+            mycursor = mydb.cursor()
+            sql = "INSERT INTO users (username, password) VALUES (%s, %s)"
+            val = (Username, Password)
+            mycursor.execute(sql, val)
+            mydb.commit()
+            print(mycursor.rowcount, "record inserted.")
+            mycursor.close()
+            mydb.close()
+
+        return redirect("/")
+        
+
 
     return render_template("Login.html")

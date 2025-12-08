@@ -50,10 +50,33 @@ try:
                     likes INT NOT NULL
                     )""")
 except:
-    print("Table already made")
+    print("Main table already made")
+
+try:
+    mydb = mysql.connector.connect(
+
+        host = env_Host,
+        port = 3306,
+        user = env_User,
+        password = env_Password,
+        database = "reviewdb"
+
+    )
+
+    mycursor = mydb.cursor()
+
+    mycursor.execute("""CREATE TABLE users 
+                    (id INT AUTO_INCREMENT PRIMARY KEY,
+                    username VARCHAR(255),
+                    password VARCHAR(255)
+                    )""")
+except:
+    print("User table already made")
 
 
-question = input("Delete table? y/n: ")
+
+
+question = input("Delete games table? y/n: ")
 
 if (question == "y"):
     mydb = mysql.connector.connect(
@@ -69,6 +92,24 @@ if (question == "y"):
     mycursor = mydb.cursor()
 
     mycursor.execute("""DROP TABLE games;""")
+    print(mycursor.rowcount, "record(s) affected")
+
+question = input("Delete users table? y/n: ")
+
+if (question == "y"):
+    mydb = mysql.connector.connect(
+
+        host = env_Host,
+        port = 3306,
+        user = env_User,
+        password = env_Password,
+        database = "reviewdb"
+
+    )
+
+    mycursor = mydb.cursor()
+
+    mycursor.execute("""DROP TABLE users;""")
     print(mycursor.rowcount, "record(s) affected")
 
 
