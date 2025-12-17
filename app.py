@@ -52,12 +52,8 @@ def convertToJpeg(image):
 LikeList = []
 
 
-def Like(Post):
-    for i in LikeList:
-        print(i)
-        if i == Post: return
-    LikeList.append(Post)
 
+def OpenMysql():
     mydb = mysql.connector.connect(
 
         host = env_Host,
@@ -69,6 +65,19 @@ def Like(Post):
     )
 
     mycursor = mydb.cursor()
+
+    return mydb, mycursor
+
+
+
+def Like(Post):
+    for i in LikeList:
+        print(i)
+        if i == Post: return
+    LikeList.append(Post)
+
+    mydb, mycursor = OpenMysql()
+
 
     sql = f"UPDATE games SET likes = likes + 1 WHERE id = '{int(Post)}'"
     mycursor.execute(sql)
@@ -79,16 +88,8 @@ def Like(Post):
 
 
 def ImageLoader():
-    mydb = mysql.connector.connect(
+    mydb, mycursor = OpenMysql()
 
-        host = env_Host,
-        port = 3306,
-        user = env_User,
-        password = env_Password,
-        database = "reviewdb"
-    
-    )
-    mycursor = mydb.cursor()
     mycursor.execute("SELECT * FROM games")
     result = mycursor.fetchall()
     mycursor.close()
@@ -123,7 +124,7 @@ def Index():
         if SubmitInfo == "upload":
             return redirect("/upload")
         elif SubmitInfo == "login":
-            return redirect("/login")
+            return redirect("/login?ErrorType = None")
         
         LikeInfo = request.form.get('Like')
         print(LikeInfo)
@@ -154,23 +155,12 @@ def UploadImage():
         Rating = int(request.form['review'])
         Img_Data = pic.read()
         Img_Data = base64.b64encode(Img_Data)
-        
-        
-
-        
+                
         
         #try:
-        mydb = mysql.connector.connect(
+        mydb, mycursor = OpenMysql()
 
-            host = env_Host,
-            port = 3306,
-            user = env_User,
-            password = env_Password,
-            database = "reviewdb"
 
-        )
-
-        mycursor = mydb.cursor()
         sql = "INSERT INTO games (game, info, review, image, likes) VALUES (%s, %s, %s, %s, %s)"
         val = (GameName, Description, Rating, Img_Data, 0)
         mycursor.execute(sql, val)
@@ -192,53 +182,60 @@ def LoginSite():
         Username = request.form['username']
         Password = request.form['password']
         
-        LoginSignUp = request.form['login']
+        LoginSignUp = request.form['type']
 
-        if LoginSignUp == 'login':
-            mydb = mysql.connector.connect(
+        if LoginSignUp == 'Login':
+            mydb, mycursor = OpenMysql()
 
-                host = env_Host,
-                port = 3306,
-                user = env_User,
-                password = env_Password,
-                database = "reviewdb"
-
-            )
-
-            mycursor = mydb.cursor()
-            mycursor.execute("SELECT * FROM games")
+            mycursor.execute("SELECT * FROM users")
             result = mycursor.fetchall()
             mycursor.close()
             mydb.close()
 
+            LoggedIn = False
             Y = 0
             for i in result:
                 if Username == result[Y][1] and Password == result[Y][2]:
-                    print("Logged in")
+                    LoggedIn = True
+                    break
                 Y += 1
+            if LoggedIn:
+                return redirect("/")
+            else:
+                return render_template("Login.html", ErrorType = "Login")           
 
-        else:        
-            mydb = mysql.connector.connect(
+        else:
 
-                host = env_Host,
-                port = 3306,
-                user = env_User,
-                password = env_Password,
-                database = "reviewdb"
+            mydb, mycursor = OpenMysql()
 
-            )
 
-            mycursor = mydb.cursor()
-            sql = "INSERT INTO users (username, password) VALUES (%s, %s)"
-            val = (Username, Password)
-            mycursor.execute(sql, val)
-            mydb.commit()
-            print(mycursor.rowcount, "record inserted.")
+            mycursor.execute("SELECT * FROM users")
+            result = mycursor.fetchall()
             mycursor.close()
             mydb.close()
+            Eksists = False
+            Y = 0
+            for i in result:
+                if Username == result[Y][1]:
+                    Eksists = True
+                    break
+                Y += 1
+            
+            if not Eksists:
+                mydb, mycursor = OpenMysql()
 
-        return redirect("/")
+                sql = "INSERT INTO users (username, password) VALUES (%s, %s)"
+                val = (Username, Password)
+                mycursor.execute(sql, val)
+                mydb.commit()
+                print(mycursor.rowcount, "record inserted.")
+                mycursor.close()
+                mydb.close()
+                return redirect("/")
+
+            else:
+                return render_template("Login.html", ErrorType = "SignUp")
         
 
 
-    return render_template("Login.html")
+    return render_template("Login.html", ErrorType = "None")

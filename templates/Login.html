@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{{ url_for('static', filename = 'Styles/Styles.css') }}">
+    
 </head>
 
 <body>
@@ -13,17 +14,26 @@
         <h1 class="LoginTitle" id="LoginTitle">Login</h1>
         <form action="/login" enctype="multipart/form-data" method="POST">
 
+            {% if ErrorType == "Login" %}
+                <p class="ErrorText">Wrong username or password</p>
+            {% elif ErrorType == "SignUp" %}
+                <p class="ErrorText">User already exists</p>
+            {% endif %}
+
             <div class="LoginInputs">
                 <input type="text" name="username" placeholder="Username" />
 
                 <input type="text" name="password" placeholder="Password" height="500px" />
             </div>
 
-            <input type="submit" name = "type" value="login">
+            <input type="submit" name = "type" value="Login" id="LoginInput" width="10vw">
 
+            
         </form>
+
+        <button onclick="ChangeLoginType()"></button>
 
     </div>
 </body>
-
+<script src="{{ url_for('static', filename = 'Scripts/LoginScript.js') }}"></script>
 </html>

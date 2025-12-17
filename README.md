@@ -16,10 +16,10 @@ WORK IN PROGRESS
 ## 2. Systembeskrivelse
 
 **Formål med applikasjonen:**\
-*Jeg vil lage en nettside der man kan dele meninger og høre andres.*
+*Jeg vil lage en nettside der man kan dele og høre andres meninger.*
 
 **Brukerflyt:**\
-*Du går inn i hovedsiden ser andres reviews og går til en annen side for å skrive din egen.*
+*Du går inn i hovedsiden ser andres reviews, hvis du liker en så kan du logge inn og like den og går til en annen side for å skrive din egen.*
 
 **Teknologier brukt:**
 
@@ -95,10 +95,16 @@ CREATE TABLE customers (
      ├── templates/
      |   └── Index.html
      |   └── UploadSite.html
+     |   └── Login.html
      ├── static/
-     |   └── Styles.css
-     ├── Images/
-     |   └── TestImages...
+     |   └── Styles/
+     |       └── Styles.css
+     |   └── Scripts/
+     |       └── LoginScript.js
+     |       └── Upload.js
+     |   └── Images/
+     |       └── Unliked.svg
+     ├── venv
      ├── .gitignore
      ├── README.md
      └── .env
@@ -145,4 +151,4 @@ Forklar ruter og funksjoner (kort).
 ## 11. Kildeliste
 
 -   w3schools\
--   flask.palletsprojects.com
+
