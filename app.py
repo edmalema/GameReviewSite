@@ -12,7 +12,7 @@ import mysql.connector
 import os
 from dotenv import find_dotenv, load_dotenv
 
-
+from flask_login import LoginManager
 
 
 
@@ -29,10 +29,16 @@ env_Host = os.getenv("host")
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "norge123"
 app.config['UPLOADED_PHOTOS_DEST'] = 'Images'
+loginManager = LoginManager()
+loginManager.init_app(app)
+loginManager.login_view = 'login'
+
 
 photos =  UploadSet('Photos', IMAGES)
 configure_uploads(app, photos)
 
+Account = ""
+LoggedIn = False
 
 class UploadForm(FlaskForm):
     photo = FileField(
@@ -130,12 +136,12 @@ def Index():
         print(LikeInfo)
         Like(LikeInfo)
         if LikeInfo != None:
-            return render_template('Index.html', SQLData = ImageLoader()[0], Images = ImageLoader()[1])
+            return render_template('Index.html', SQLData = ImageLoader()[0], Images = ImageLoader()[1], LoggedIn = LoggedIn, AccountName = Account)
             
 
 
     
-    return render_template('Index.html', SQLData = ImageLoader()[0], Images = ImageLoader()[1]) 
+    return render_template('Index.html', SQLData = ImageLoader()[0], Images = ImageLoader()[1], LoggedIn = LoggedIn, AccountName = Account) 
 
 
 
@@ -239,3 +245,8 @@ def LoginSite():
 
 
     return render_template("Login.html", ErrorType = "None")
+
+
+@loginManager.user_loader
+def  load_user(user_id):
+    return User.get(user_id)
